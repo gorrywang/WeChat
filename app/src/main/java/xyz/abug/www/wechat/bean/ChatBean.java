@@ -21,12 +21,23 @@ public class ChatBean {
     private String mName;
     //最后一条消息
     private String mLastChat;
+    //头像
+    private int mImg;
 
-    public ChatBean(int mChatType, String mTime, String mName, String mLastChat) {
+    public ChatBean(int mChatType, String mTime, String mName, String mLastChat, int mImg) {
         this.mChatType = mChatType;
         this.mTime = mTime;
         this.mName = mName;
         this.mLastChat = mLastChat;
+        this.mImg = mImg;
+    }
+
+    public int getmImg() {
+        return mImg;
+    }
+
+    public void setmImg(int mImg) {
+        this.mImg = mImg;
     }
 
     public int getmChatType() {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.fragment.MainChatFragment;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void firstShow() {
         if (mChatFragment == null) {
             mChatFragment = new MainChatFragment();
-            mFragmentContent = mChatFragment;
+            mFragmentContent = new Fragment();
         }
         mManager = getSupportFragmentManager();
         switchContent(mFragmentContent, mChatFragment);
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mFragmentContent != to) {
             mFragmentContent = to;
             FragmentTransaction transaction = mManager.beginTransaction();
+            Toast.makeText(MainActivity.this, to.isAdded() + "", Toast.LENGTH_SHORT).show();
             if (!to.isAdded()) {
                 transaction.hide(from).add(R.id.ac_main_frame_show, to).commit();
             } else {
