@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#38373C</color>
+    <color name="colorPrimaryDark">#38373C</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="app_bottom">#f4f4f4</color>
+    <color name="app_line">#d9d9d9</color>
+
+    <!--字体颜色-->
+    <color name="fontcolor_content_check">#45c01a</color>
+    <color name="fontcolor_content">#999999</color>
 </resources>

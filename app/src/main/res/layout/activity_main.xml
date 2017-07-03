@@ -1,18 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xyz.abug.www.wechat.MainActivity">
+    android:orientation="vertical"
+    tools:context="xyz.abug.www.wechat.activity.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colorPrimary">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/ac_main_txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/main_chat"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/font_title" />
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/ac_main_frame_show"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_size"
+        android:background="@color/app_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/app_bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ac_main_linear_chat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ac_main_img_chat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bottom_chat_check" />
+
+            <TextView
+                android:id="@+id/ac_main_txt_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/main_chat"
+                android:textColor="@color/fontcolor_content_check"
+                android:textSize="@dimen/font_bottom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ac_main_linear_friend"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ac_main_img_friend"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bottom_friend" />
+
+            <TextView
+                android:id="@+id/ac_main_txt_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/main_friend"
+                android:textColor="@color/fontcolor_content"
+                android:textSize="@dimen/font_bottom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ac_main_linear_look"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ac_main_img_look"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bottom_look" />
+
+            <TextView
+                android:id="@+id/ac_main_txt_look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/main_look"
+                android:textColor="@color/fontcolor_content"
+                android:textSize="@dimen/font_bottom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ac_main_linear_user"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ac_main_img_user"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bottom_user" />
+
+            <TextView
+                android:id="@+id/ac_main_txt_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/main_user"
+                android:textColor="@color/fontcolor_content"
+                android:textSize="@dimen/font_bottom" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
