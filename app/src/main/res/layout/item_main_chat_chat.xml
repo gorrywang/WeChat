@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="65dp"
     android:gravity="center_vertical"
+    android:id="@+id/item_main_chat_relative_item"
     android:padding="8dp">
 
     <ImageView

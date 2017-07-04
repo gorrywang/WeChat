@@ -4,11 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.fragment.MainChatFragment;
@@ -24,17 +29,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Fragment mFragmentContent;
     private TextView mTextChat, mTextUser, mTextFriend, mTextLook;
     private ImageView mImgChat, mImgUser, mImgFriend, mImgLook;
-    private TextView mTextTitle;
+    private Toolbar mBarTitle;
     private ImageView mImgBackground;
+    private ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //改变状态栏
         immersion(true);
+        //欢迎界面切换到主界面
         switchWelcome();
+        //初始化控件
         initView();
+        //设置toolbar
+        setToolbar();
+        //第一个页面显示
         firstShow();
+    }
+
+    /**
+     * 菜单
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /**
+     * 改变菜单的按钮
+     */
+    private int mMenuCount = 0;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mMenuCount == 0) {
+            //1
+            menu.findItem(R.id.menu_main_add).setVisible(true);
+            menu.findItem(R.id.menu_main_search).setVisible(true);
+            menu.findItem(R.id.menu_main_friend).setVisible(false);
+        } else if (mMenuCount == 1) {
+            //2
+            menu.findItem(R.id.menu_main_add).setVisible(false);
+            menu.findItem(R.id.menu_main_search).setVisible(false);
+            menu.findItem(R.id.menu_main_friend).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_main_add).setVisible(false);
+            menu.findItem(R.id.menu_main_search).setVisible(false);
+            menu.findItem(R.id.menu_main_friend).setVisible(false);
+        }
+        return true;
+    }
+
+    /**
+     * 菜单的点击事件
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_main_add:
+                //添加
+                Toast.makeText(this, "添加按钮点击", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_main_friend:
+                //好友
+                Toast.makeText(this, "好友按钮点击", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_main_search:
+                //搜索
+                Toast.makeText(this, "搜索按钮点击", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 设置toolbar
+     */
+    private void setToolbar() {
+        setSupportActionBar(mBarTitle);
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
+            mActionBar.setTitle(R.string.main_chat);
+        }
     }
 
     /**
@@ -82,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initView() {
         mImgBackground = (ImageView) findViewById(R.id.ac_main_img_background);
-        mTextTitle = (TextView) findViewById(R.id.ac_main_txt_title);
+        mBarTitle = (Toolbar) findViewById(R.id.ac_main_toolbar_title);
         mLinearChat = (LinearLayout) findViewById(R.id.ac_main_linear_chat);
         mLinearFriend = (LinearLayout) findViewById(R.id.ac_main_linear_friend);
         mLinearLook = (LinearLayout) findViewById(R.id.ac_main_linear_look);
@@ -113,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switchContent(mFragmentContent, mChatFragment);
     }
 
+    /**
+     * 点击事件
+     */
     @Override
     public void onClick(View v) {
         //恢复ui
@@ -121,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ac_main_linear_chat:
                 //微信
                 //标题设置
-                mTextTitle.setText(R.string.main_chat);
+                mMenuCount = 0;
+                mActionBar.setTitle(R.string.main_chat);
                 //选中状态
                 mImgChat.setImageResource(R.drawable.bottom_chat_check);
                 mTextChat.setTextColor(getResources().getColor(R.color.fontcolor_content_check));
@@ -133,7 +216,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ac_main_linear_friend:
                 //好友
                 //标题设置
-                mTextTitle.setText(R.string.main_friend);
+                mMenuCount = 1;
+                mActionBar.setTitle(R.string.main_friend);
                 //选中状态
                 mImgFriend.setImageResource(R.drawable.bottom_friend_check);
                 mTextFriend.setTextColor(getResources().getColor(R.color.fontcolor_content_check));
@@ -145,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ac_main_linear_look:
                 //发现
                 //标题设置
-                mTextTitle.setText(R.string.main_look);
+                mMenuCount = 2;
+                mActionBar.setTitle(R.string.main_look);
                 //选中状态
                 mImgLook.setImageResource(R.drawable.bottom_look_check);
                 mTextLook.setTextColor(getResources().getColor(R.color.fontcolor_content_check));
@@ -157,7 +242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ac_main_linear_user:
                 //我
                 //标题设置
-                mTextTitle.setText(R.string.main_user);
+                mMenuCount = 3;
+                mActionBar.setTitle(R.string.main_user);
                 //选中状态
                 mImgUser.setImageResource(R.drawable.bottom_user_check);
                 mTextUser.setTextColor(getResources().getColor(R.color.fontcolor_content_check));
@@ -167,11 +253,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switchContent(mFragmentContent, mUserFragment);
                 break;
         }
+        //标题图标
+        invalidateOptionsMenu();
     }
 
 
     /**
-     * fragment add and show
+     * fragment切换
      */
     private void switchContent(Fragment from, Fragment to) {
         if (mFragmentContent != to) {

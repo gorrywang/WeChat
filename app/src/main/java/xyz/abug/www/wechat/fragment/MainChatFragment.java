@@ -9,15 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import xyz.abug.www.wechat.R;
+import xyz.abug.www.wechat.activity.ChatActivity;
 import xyz.abug.www.wechat.bean.ChatBean;
 import xyz.abug.www.wechat.view.MyDecoration;
+
+import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_FRIEND;
+import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
 
 /**
  * Created by iswgr on 2017/7/3.
@@ -64,11 +68,40 @@ public class MainChatFragment extends Fragment {
      */
     private void initChatData() {
         ChatBean bean;
-        for (int i = 0; i < 10; i++) {
-            bean = new ChatBean(1, "12:1" + i, "张三" + i, "你好，我是联想一班的张三" + i, R.drawable.icon);
-            mChatBeans.add(bean);
-            bean = null;
-        }
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:12", "亮亮", "我叫桂亮，我是最帅的~哈哈哈", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "11:12", "东辉", "我是葬爱家族的族长祁东辉", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "10:09", "林依", "林雨~依直走~", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:12", "老边", "嘿~嘿~嘿~", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:05", "生鑫", "wo ji ni niang a", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:00", "刘兴洲", "[图片]", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:31", "老司机", "卧槽！有人把我头按在键盘上了！唔唔唔ABP-159, SIRO-1774, MIRD-134, MIDE-128, ABP-145, N0962, ABP159, ", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:25", "赵诺诺", "哈哈哈，撒比", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:12", "汉志", "哥哥你起床了吗？我到了", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "微信运动", "[您的运动排名]", R.drawable.icon);
+        mChatBeans.add(bean);
+        bean = null;
+
     }
 
     /**
@@ -85,7 +118,18 @@ public class MainChatFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_main_chat_chat, parent, false);
-            ViewHolder viewHolder = new ViewHolder(inflate);
+            final ViewHolder viewHolder = new ViewHolder(inflate);
+            //点击事件
+            viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //获取指针
+                    int adapterPosition = viewHolder.getAdapterPosition();
+                    ChatBean bean = mChatBeans.get(adapterPosition);
+                    //跳转
+                    ChatActivity.jumpActivity(getContext(), bean);
+                }
+            });
             return viewHolder;
         }
 
@@ -107,9 +151,11 @@ public class MainChatFragment extends Fragment {
 
             TextView textName, textTime, textChat;
             ImageView img;
+            RelativeLayout relativeLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
+                relativeLayout = (RelativeLayout) itemView.findViewById(R.id.item_main_chat_relative_item);
                 textName = (TextView) itemView.findViewById(R.id.item_main_chat_txt_name);
                 textTime = (TextView) itemView.findViewById(R.id.item_main_chat_txt_time);
                 textChat = (TextView) itemView.findViewById(R.id.item_main_chat_txt_chat);

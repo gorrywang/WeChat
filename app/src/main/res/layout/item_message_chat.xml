@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/item_message_relative_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/item_message_img_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon" />
+
+        <TextView
+            android:id="@+id/item_message_txt_left_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="70dp"
+            android:layout_toRightOf="@+id/item_message_img_left"
+            android:background="@drawable/chat_left"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="世啊世世啊世"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/item_message_relative_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/item_message_img_right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon" />
+
+        <TextView
+            android:id="@+id/item_message_txt_right_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@+id/item_message_img_right"
+            android:background="@drawable/chat_right"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="世啊世世啊世"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+
+</FrameLayout>
