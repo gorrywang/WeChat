@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.fragment.MainChatFragment;
@@ -26,20 +25,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mTextChat, mTextUser, mTextFriend, mTextLook;
     private ImageView mImgChat, mImgUser, mImgFriend, mImgLook;
     private TextView mTextTitle;
+    private ImageView mImgBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        immersion(true);
+        switchWelcome();
         initView();
         firstShow();
+    }
 
+    /**
+     * 状态栏改变
+     */
+    private void immersion(boolean isBool) {
+        View decorView = getWindow().getDecorView();
+        int option = 0;
+        if (isBool) {
+            //沉浸
+            option = View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        } else {
+            //不沉浸
+            option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        }
+        decorView.setSystemUiVisibility(option);
+    }
+
+    /**
+     * 从wel到主页面
+     */
+    private void switchWelcome() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        immersion(false);
+                        mImgBackground.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
      * 初始化
      */
     private void initView() {
+        mImgBackground = (ImageView) findViewById(R.id.ac_main_img_background);
         mTextTitle = (TextView) findViewById(R.id.ac_main_txt_title);
         mLinearChat = (LinearLayout) findViewById(R.id.ac_main_linear_chat);
         mLinearFriend = (LinearLayout) findViewById(R.id.ac_main_linear_friend);
@@ -135,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mFragmentContent != to) {
             mFragmentContent = to;
             FragmentTransaction transaction = mManager.beginTransaction();
-            Toast.makeText(MainActivity.this, to.isAdded() + "", Toast.LENGTH_SHORT).show();
             if (!to.isAdded()) {
                 transaction.hide(from).add(R.id.ac_main_frame_show, to).commit();
             } else {
