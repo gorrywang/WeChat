@@ -11,4 +11,6 @@
     <color name="fontcolor_content">#999999</color>
     <color name="a">#c7c7cc</color>
     <color name="b">#ff3b30</color>
+
+    <color name="partTranslucent">#39000000</color>
 </resources>
