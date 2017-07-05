@@ -3,6 +3,7 @@ package xyz.abug.www.wechat.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,7 +64,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     //输入框
     private EditText mEditInput;
     //输入信息的三种状态
-    private static final int INPUT_STATUS_SHENGYIN  = 0;
+    private static final int INPUT_STATUS_SHENGYIN = 0;
     private static final int INPUT_STATUS_BIAOQING = 1;
     private static final int INPUT_STATUS_JIAHAO = 2;
     //当前输入的状态
@@ -75,13 +76,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private boolean mTwoBool = true;
     private boolean mThreeBool = true;
     //表情框和添加框
-    private LinearLayout mLinearBiaoqing ,mLinearJiahao;
+    private LinearLayout mLinearBiaoqing, mLinearJiahao;
     //好友的控制面板
     private LinearLayout mLinearFriend;
     //键盘管理器
     private InputMethodManager mInputManager;
     //图灵管理
     private TuringApiManager mManager;
+    //表情和加号viewpager
+    private ViewPager mPagerBiaoqing, mPagerJiahao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         //初始化控件
         initView();
         //初始化键盘管理器
-        mInputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         //设置toolbar
         setToolbar();
         //设置共有属性
@@ -150,22 +153,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     *监听软键盘发送按钮
+     * 监听软键盘发送按钮
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER&& event.getAction() == KeyEvent.ACTION_DOWN){
+        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
             //查看数据
             String data = mEditInput.getText().toString().trim();
             if (TextUtils.isEmpty(data)) {
-                Toast.makeText(ChatActivity.this,"请输入发送内容",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatActivity.this, "请输入发送内容", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            MessageBean bean = new MessageBean(1,1,data,"2017.1.1","王高瑞",R.drawable.icon);
+            MessageBean bean = new MessageBean(1, 1, data, "2017.1.1", "王高瑞", R.drawable.icon);
             mMessageBeanList.add(bean);
             mAdapter.notifyDataSetChanged();
             mEditInput.setText("");
-            mRecyclerView.smoothScrollToPosition(mMessageBeanList.size()-1);
+            mRecyclerView.smoothScrollToPosition(mMessageBeanList.size() - 1);
 //            //关闭软键盘
 //            if(mInputManager.isActive()){
 //                mInputManager.hideSoftInputFromWindow(ChatActivity.this.getCurrentFocus().getWindowToken(), 0);
@@ -174,7 +177,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 mManager.requestTuringAPI(data);
             } catch (Exception e) {
-                Toast.makeText(ChatActivity.this,"错误",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatActivity.this, "错误", Toast.LENGTH_SHORT).show();
             }
 
             return true;
@@ -186,6 +189,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化控件
      */
     private void initView() {
+        mPagerBiaoqing = (ViewPager) findViewById(R.id.ac_chat_pager_biaoqing);
+        mPagerJiahao = (ViewPager) findViewById(R.id.ac_chat_pager_jiahao);
         mLinearFriend = (LinearLayout) findViewById(R.id.ac_chat_linear_friend_con);
         mToolbar = (Toolbar) findViewById(R.id.ac_chat_toolbar_title);
         mLinearBiaoqing = (LinearLayout) findViewById(R.id.ac_chat_linear_biaoqing);
@@ -205,7 +210,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     //取得焦点
-                    if (mInputStatus == INPUT_STATUS_JIAHAO || mInputStatus == INPUT_STATUS_BIAOQING){
+                    if (mInputStatus == INPUT_STATUS_JIAHAO || mInputStatus == INPUT_STATUS_BIAOQING) {
                         //关闭两个面板
                         mLinearJiahao.setVisibility(View.GONE);
                         mLinearBiaoqing.setVisibility(View.GONE);
@@ -308,7 +313,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.ac_chat_edit_input:
                 //关闭面板
-                if (mInputStatus == INPUT_STATUS_JIAHAO || mInputStatus == INPUT_STATUS_BIAOQING){
+                if (mInputStatus == INPUT_STATUS_JIAHAO || mInputStatus == INPUT_STATUS_BIAOQING) {
                     //关闭两个面板
                     mLinearJiahao.setVisibility(View.GONE);
                     mLinearBiaoqing.setVisibility(View.GONE);
@@ -331,7 +336,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     mLinearBiaoqing.setVisibility(View.GONE);
                     //打开输入法
                     mInputManager.showSoftInput(mEditInput, InputMethodManager.RESULT_SHOWN);
-                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     //edit获取焦点
                     mEditInput.requestFocus();
                     //换声音标志
@@ -381,7 +386,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     mLinearBiaoqing.setVisibility(View.GONE);
                     //打开输入法
                     mInputManager.showSoftInput(mEditInput, InputMethodManager.RESULT_SHOWN);
-                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     //edit获取焦点
                     mEditInput.requestFocus();
                     //换表情
@@ -419,7 +424,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     mLinearBiaoqing.setVisibility(View.GONE);
                     //打开输入法
                     mInputManager.showSoftInput(mEditInput, InputMethodManager.RESULT_SHOWN);
-                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    mInputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     //edit获取焦点
                     mEditInput.requestFocus();
                 }
@@ -522,16 +527,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     JSONObject result_obj = new JSONObject(result.getContent().toString());
                     //判断json对象中有没有text
                     if (result_obj.has("text")) {
-                         final String ss = (String) result_obj.get("text");
+                        final String ss = (String) result_obj.get("text");
                         //更新数据
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(ChatActivity.this,ss,Toast.LENGTH_SHORT).show();
-                                MessageBean bean = new MessageBean(0,1,ss,"2017.1.1",mBean.getmName(),R.drawable.icon);
+                                MessageBean bean = new MessageBean(0, 1, ss, "2017.1.1", mBean.getmName(), R.drawable.icon);
                                 mMessageBeanList.add(bean);
                                 mAdapter.notifyDataSetChanged();
-                                mRecyclerView.smoothScrollToPosition(mMessageBeanList.size()-1);
+                                mRecyclerView.smoothScrollToPosition(mMessageBeanList.size() - 1);
                             }
                         });
                     }

@@ -112,6 +112,7 @@ public class MainChatFragment extends Fragment {
                     //删除
                     mChatBeans.remove(adapterPosition);
                     mMyChatAdapter.notifyDataSetChanged();
+                    mRecycler.smoothCloseMenu();
                 }
             }
         });

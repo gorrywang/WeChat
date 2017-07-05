@@ -52,11 +52,11 @@
             android:background="@drawable/edit">
 
             <EditText
-                android:imeOptions="actionSend"
                 android:id="@+id/ac_chat_edit_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:imeOptions="actionSend"
                 android:singleLine="true" />
 
             <TextView
@@ -88,22 +88,35 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_size"
         android:background="@color/app_line" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <!--功能-->
         <LinearLayout
             android:id="@+id/ac_chat_linear_jiahao"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:orientation="horizontal"
             android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/ac_chat_pager_jiahao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
+        <!--表情-->
         <LinearLayout
             android:id="@+id/ac_chat_linear_biaoqing"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:orientation="horizontal"
             android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/ac_chat_pager_biaoqing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </FrameLayout>
 
