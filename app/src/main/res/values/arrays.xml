@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="provinces">
+        <item>安文涛</item>
         <item>爸</item>
         <item>边培曾</item>
         <item>曹晶</item>

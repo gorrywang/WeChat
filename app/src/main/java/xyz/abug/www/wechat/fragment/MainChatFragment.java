@@ -153,7 +153,7 @@ public class MainChatFragment extends Fragment {
         bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.user1);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "微信运动", "[您的运动排名]", R.drawable.user2);
+        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "顺丰速运", "[我要出出出出出出出名]", R.drawable.sfsy);
         mChatBeans.add(bean);
         bean = null;
 

@@ -9,12 +9,13 @@
 
 
     <ImageView
+        android:id="@+id/item_friend_img"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/icon" />
 
     <TextView
-        android:id="@+id/tvCity"
+        android:id="@+id/item_friend_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"

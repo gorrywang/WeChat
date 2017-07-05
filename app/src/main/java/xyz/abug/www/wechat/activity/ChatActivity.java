@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ import xyz.abug.www.wechat.utils.TulingUtils;
 
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_FRIEND;
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
-import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_TAKE;
 import static xyz.abug.www.wechat.utils.TulingUtils.mTuringKey;
 import static xyz.abug.www.wechat.utils.TulingUtils.mUniqueId;
 
@@ -86,6 +86,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private TuringApiManager mManager;
     //表情和加号viewpager
     private ViewPager mPagerBiaoqing, mPagerJiahao;
+    //公众号
+    private LinearLayout mLinearGzh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setToolbar();
         //设置共有属性
         setting();
-        //分开管理
-        switchType();
+        //初始化数据
+        initData();
+        //初始化适配器以及键盘
+        initAdapterANdInput();
 
     }
 
@@ -121,15 +125,23 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initData() {
         MessageBean bean = null;
-        bean = new MessageBean(0, 0, "你在干什么", "2017.1.1", mBean.getmName(), R.drawable.icon);
-        mMessageBeanList.add(bean);
-        bean = null;
-        bean = new MessageBean(1, 0, "没干什么", "2017.1.1", mBean.getmName(), R.drawable.icon);
-        mMessageBeanList.add(bean);
-        bean = null;
-        bean = new MessageBean(0, 0, mBean.getmLastChat(), "2017.1.1", mBean.getmName(), R.drawable.icon);
-        mMessageBeanList.add(bean);
-        bean = null;
+        if (mBean.getmChatType() == CHAT_TYPE_FRIEND) {
+            //好友
+            bean = new MessageBean(0, 0, "你在干什么", "2017.1.1", mBean.getmName(), mBean.getmImg());
+            mMessageBeanList.add(bean);
+            bean = null;
+            bean = new MessageBean(1, 0, "没干什么", "2017.1.1", mBean.getmName(), R.drawable.im);
+            mMessageBeanList.add(bean);
+            bean = null;
+            bean = new MessageBean(0, 0, mBean.getmLastChat(), "2017.1.1", mBean.getmName(), mBean.getmImg());
+            mMessageBeanList.add(bean);
+            bean = null;
+        } else if (mBean.getmChatType() == CHAT_TYPE_GROUP) {
+            //公众号
+            bean = new MessageBean(0, 1, "你在干什么", "2017.1.1", mBean.getmName(), mBean.getmImg());
+            mMessageBeanList.add(bean);
+            bean = null;
+        }
     }
 
     /**
@@ -138,6 +150,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private void setting() {
         //名字
         mActionBar.setTitle(mBean.getmName());
+        //开启图灵
+        startTuling();
+        //标题图标
+        invalidateOptionsMenu();
     }
 
     /**
@@ -165,7 +181,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(ChatActivity.this, "请输入发送内容", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            MessageBean bean = new MessageBean(1, 1, data, "2017.1.1", "王高瑞", R.drawable.icon);
+            MessageBean bean = new MessageBean(1, 0, data, "2017.1.1", "王高瑞", R.drawable.im);
             mMessageBeanList.add(bean);
             mAdapter.notifyDataSetChanged();
             mEditInput.setText("");
@@ -190,6 +206,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化控件
      */
     private void initView() {
+        mLinearGzh = (LinearLayout) findViewById(R.id.item_message_linear_gzh);
         mPagerBiaoqing = (ViewPager) findViewById(R.id.ac_chat_pager_biaoqing);
         mPagerJiahao = (ViewPager) findViewById(R.id.ac_chat_pager_jiahao);
         mLinearFriend = (LinearLayout) findViewById(R.id.ac_chat_linear_friend_con);
@@ -229,34 +246,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    /**
-     * 判断页面类型
-     * public static final int CHAT_TYPE_FRIEND = 0;
-     * public static final int CHAT_TYPE_GROUP = 1;
-     * public static final int CHAT_TYPE_TAKE = 2;
-     * 0：好友消息
-     * 1:群消息
-     * 2:公众号消息
-     */
-    private void switchType() {
-        switch (mBean.getmChatType()) {
-            case CHAT_TYPE_FRIEND:
-                //好友消息
-                mLinearFriend.setVisibility(View.VISIBLE);
-                //开启图灵
-                startTuling();
-                setFriendChat();
-                break;
-            case CHAT_TYPE_GROUP:
-                //群组消息
-                mLinearFriend.setVisibility(View.GONE);
-                break;
-            case CHAT_TYPE_TAKE:
-                //公众号消息
-                mLinearFriend.setVisibility(View.GONE);
-                break;
-        }
-    }
 
     /**
      * 开启图灵
@@ -287,9 +276,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 好友消息
      */
-    private void setFriendChat() {
-        //初始化数据
-        initData();
+    private void initAdapterANdInput() {
         //初始化适配器
         initAdapter();
         //初始化pager
@@ -472,6 +459,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 //返回
                 finish();
                 break;
+            case R.id.menu_chat_set:
+                //设置
+                Toast.makeText(this, "公众号设置按钮点击", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_chat_user:
+                //用户
+                Toast.makeText(this, "好友资料按钮点击", Toast.LENGTH_SHORT).show();
+                break;
         }
         return true;
     }
@@ -522,19 +517,31 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             MessageBean bean = mMessageBeanList.get(position);
-            int who = bean.getmWho();
-            if (who == 0) {
+            int i = bean.getmMessageType();
+            if (i == 0) {
                 //好友
-                holder.relativeLeft.setVisibility(View.VISIBLE);
-                holder.relativeRight.setVisibility(View.GONE);
-                holder.leftText.setText(bean.getmMessage());
-                holder.leftImg.setImageResource(bean.getmImg());
-            } else {
-                //自己
+                int who = bean.getmWho();
+                if (who == 0) {
+                    //好友
+                    holder.relativeLeft.setVisibility(View.VISIBLE);
+                    holder.relativeRight.setVisibility(View.GONE);
+                    holder.linearLayout.setVisibility(View.GONE);
+                    holder.leftText.setText(bean.getmMessage());
+                    holder.leftImg.setImageResource(bean.getmImg());
+                } else {
+                    //自己
+                    holder.relativeLeft.setVisibility(View.GONE);
+                    holder.relativeRight.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setVisibility(View.GONE);
+                    holder.rightText.setText(bean.getmMessage());
+                    holder.rightImg.setImageResource(bean.getmImg());
+                }
+            }
+            if (i == 1) {
+                //公众号
+                holder.linearLayout.setVisibility(View.VISIBLE);
                 holder.relativeLeft.setVisibility(View.GONE);
-                holder.relativeRight.setVisibility(View.VISIBLE);
-                holder.rightText.setText(bean.getmMessage());
-                holder.rightImg.setImageResource(bean.getmImg());
+                holder.relativeRight.setVisibility(View.GONE);
             }
         }
 
@@ -548,6 +555,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             RelativeLayout relativeLeft, relativeRight;
             TextView leftText, rightText;
             ImageView leftImg, rightImg;
+            LinearLayout linearLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -557,6 +565,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 rightText = (TextView) itemView.findViewById(R.id.item_message_txt_right_show);
                 relativeLeft = (RelativeLayout) itemView.findViewById(R.id.item_message_relative_left);
                 relativeRight = (RelativeLayout) itemView.findViewById(R.id.item_message_relative_right);
+                linearLayout = (LinearLayout) itemView.findViewById(R.id.item_message_linear_gzh);
             }
         }
     }
@@ -583,7 +592,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                MessageBean bean = new MessageBean(0, 1, ss, "2017.1.1", mBean.getmName(), R.drawable.icon);
+                                MessageBean bean = new MessageBean(0, 0, ss, "2017.1.1", mBean.getmName(), mBean.getmImg());
                                 mMessageBeanList.add(bean);
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.smoothScrollToPosition(mMessageBeanList.size() - 1);
@@ -602,5 +611,36 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("TAG", errorMessage.getMessage());
         }
     };
+
+
+
+    /**
+     * 菜单
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mBean.getmChatType() == 0) {
+            //1
+            menu.findItem(R.id.menu_chat_user).setVisible(true);
+            menu.findItem(R.id.menu_chat_set).setVisible(false);
+        } else if (mBean.getmChatType() == 1) {
+            //2
+            menu.findItem(R.id.menu_chat_user).setVisible(false);
+            menu.findItem(R.id.menu_chat_set).setVisible(true);
+        }
+        return true;
+    }
+
+    /**
+     * 菜单的点击事件
+     */
 
 }
