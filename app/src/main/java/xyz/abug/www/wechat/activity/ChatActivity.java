@@ -37,6 +37,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.rockerhieu.emojicon.EmojiconGridFragment;
+import io.github.rockerhieu.emojicon.EmojiconsFragment;
+import io.github.rockerhieu.emojicon.emoji.Emojicon;
 import turing.os.http.core.ErrorMessage;
 import turing.os.http.core.HttpConnectionListener;
 import turing.os.http.core.RequestResult;
@@ -50,7 +53,7 @@ import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
 import static xyz.abug.www.wechat.utils.TulingUtils.mTuringKey;
 import static xyz.abug.www.wechat.utils.TulingUtils.mUniqueId;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener ,EmojiconGridFragment.OnEmojiconClickedListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
     //好友实体对象
     private static ChatBean mBean;
@@ -85,7 +88,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     //图灵管理
     private TuringApiManager mManager;
     //表情和加号viewpager
-    private ViewPager mPagerBiaoqing, mPagerJiahao;
+    private ViewPager mPagerJiahao;
     //公众号
     private LinearLayout mLinearGzh;
 
@@ -103,6 +106,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setting();
         //初始化数据
         initData();
+        //初始化表情
+        setEmojiconFragment(false);
         //初始化适配器以及键盘
         initAdapterANdInput();
 
@@ -207,7 +212,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initView() {
         mLinearGzh = (LinearLayout) findViewById(R.id.item_message_linear_gzh);
-        mPagerBiaoqing = (ViewPager) findViewById(R.id.ac_chat_pager_biaoqing);
         mPagerJiahao = (ViewPager) findViewById(R.id.ac_chat_pager_jiahao);
         mLinearFriend = (LinearLayout) findViewById(R.id.ac_chat_linear_friend_con);
         mToolbar = (Toolbar) findViewById(R.id.ac_chat_toolbar_title);
@@ -472,6 +476,29 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * 表情监听
+     */
+    @Override
+    public void onEmojiconBackspaceClicked(View v) {
+//        Toast.makeText(ChatActivity.this,"a",Toast.LENGTH_SHORT).show();
+        EmojiconsFragment.backspace(mEditInput);
+    }
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+//        Toast.makeText(ChatActivity.this,"点击",Toast.LENGTH_SHORT).show();
+        EmojiconsFragment.input(mEditInput, emojicon);
+    }
+
+    //EmojiconsFragment表情显示的fragment
+    private void setEmojiconFragment(boolean useSystemDefault) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.ac_chat_frame_biaoqing, EmojiconsFragment.newInstance(useSystemDefault))
+                .commit();
+    }
+
+    /**
      * pagerAdapter
      */
     private class MyPagerAdapter extends PagerAdapter {
@@ -639,8 +666,5 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    /**
-     * 菜单的点击事件
-     */
 
 }

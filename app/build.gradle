@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "xyz.abug.www.wechat"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -31,6 +31,7 @@ dependencies {
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
+    compile 'com.github.promeg:tinypinyin:1.0.0'
+    compile 'io.github.rockerhieu:emojicon:1.4.2'
 
 }

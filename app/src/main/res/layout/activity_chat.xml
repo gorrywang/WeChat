@@ -110,14 +110,13 @@
         <LinearLayout
             android:id="@+id/ac_chat_linear_biaoqing"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="220dp"
             android:orientation="horizontal"
             android:visibility="gone">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/ac_chat_pager_biaoqing"
+            <FrameLayout
+                android:id="@+id/ac_chat_frame_biaoqing"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="fill_parent"/>
         </LinearLayout>
     </FrameLayout>
 
