@@ -23,13 +23,24 @@ public class ChatBean {
     private String mLastChat;
     //头像
     private int mImg;
+    //是否设置为已读
+    private int mRead;
 
-    public ChatBean(int mChatType, String mTime, String mName, String mLastChat, int mImg) {
+    public ChatBean(int mChatType, String mTime, String mName, String mLastChat, int mImg, int mRead) {
         this.mChatType = mChatType;
         this.mTime = mTime;
         this.mName = mName;
         this.mLastChat = mLastChat;
         this.mImg = mImg;
+        this.mRead = mRead;
+    }
+
+    public int getmRead() {
+        return mRead;
+    }
+
+    public void setmRead(int mRead) {
+        this.mRead = mRead;
     }
 
     public int getmImg() {

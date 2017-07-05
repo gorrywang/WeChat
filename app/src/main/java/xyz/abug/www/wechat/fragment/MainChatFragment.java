@@ -107,12 +107,18 @@ public class MainChatFragment extends Fragment {
                 if (menuPosition == 0) {
                     //标记为未读
                     Toast.makeText(getContext(), "标记为未读", Toast.LENGTH_SHORT).show();
+                    //设置
+                    ChatBean bean = mChatBeans.get(adapterPosition);
+                    bean.setmRead(1);
+                    bean.setmLastChat("[未读消息]"+bean.getmLastChat());
+                    mChatBeans.set(adapterPosition,bean);
                     mRecycler.smoothCloseMenu();
+                    mMyChatAdapter.notifyDataSetChanged();
                 } else if (menuPosition == 1) {
                     //删除
                     mChatBeans.remove(adapterPosition);
-                    mMyChatAdapter.notifyDataSetChanged();
                     mRecycler.smoothCloseMenu();
+                    mMyChatAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -123,37 +129,37 @@ public class MainChatFragment extends Fragment {
      */
     private void initChatData() {
         ChatBean bean;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:12", "亮亮", "我叫桂亮，我是最帅的~哈哈哈", R.drawable.user1);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:12", "亮亮", "我叫桂亮，我是最帅的~哈哈哈", R.drawable.user1,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "11:12", "东辉", "我是葬爱家族的族长祁东辉", R.drawable.user2);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "11:12", "东辉", "我是葬爱家族的族长祁东辉", R.drawable.user2,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "10:09", "林依", "林雨~依直走~", R.drawable.user3);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "10:09", "林依", "林雨~依直走~", R.drawable.user3,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:12", "老边", "嘿~嘿~嘿~", R.drawable.user4);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:12", "老边", "嘿~嘿~嘿~", R.drawable.user4,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:05", "生鑫", "wo ji ni niang a", R.drawable.user5);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:05", "生鑫", "wo ji ni niang a", R.drawable.user5,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:00", "刘兴洲", "[图片]", R.drawable.user6);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:00", "刘兴洲", "[图片]", R.drawable.user6,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:31", "老司机", "卧槽！有人把我头按在键盘上了！唔唔唔RRDTYFGHUIHYGYTFRYGHUIYGUTYFYTYG", R.drawable.user7);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:31", "老司机", "卧槽！有人把我头按在键盘上了！唔唔唔RRDTYFGHUIHYGYTFRYGHUIYGUTYFYTYG", R.drawable.user7,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:25", "赵诺诺", "哈哈哈，撒比", R.drawable.user8);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:25", "赵诺诺", "哈哈哈，撒比", R.drawable.user8,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:12", "汉志", "哥哥你起床了吗？我到了", R.drawable.user9);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:12", "汉志", "哥哥你起床了吗？我到了", R.drawable.user9,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.user1);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.user1,0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "顺丰速运", "[我要出出出出出出出名]", R.drawable.sfsy);
+        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "顺丰速运", "[我要出出出出出出出名]", R.drawable.sfsy,0);
         mChatBeans.add(bean);
         bean = null;
 
@@ -181,27 +187,40 @@ public class MainChatFragment extends Fragment {
         @Override
         public ViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
             final ViewHolder viewHolder = new ViewHolder(realContentView);
-            //点击事件
-            viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //获取指针
-                    int adapterPosition = viewHolder.getAdapterPosition();
-                    ChatBean bean = mChatBeans.get(adapterPosition);
-                    //跳转
-                    ChatActivity.jumpActivity(getContext(), bean);
-                }
-            });
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             ChatBean bean = mChatBeans.get(position);
+            if (bean.getmRead() == 1) {
+                holder.textChat.setTextColor(Color.RED);
+            }
             holder.textChat.setText(bean.getmLastChat());
             holder.textTime.setText(bean.getmTime());
             holder.textName.setText(bean.getmName());
             holder.img.setImageResource(bean.getmImg());
+            //点击事件
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //获取指针
+                    int adapterPosition = position;
+                    ChatBean bean = mChatBeans.get(adapterPosition);
+                    //判断是不是一度消息
+                    int i = bean.getmRead();
+                    if (i == 1) {
+                        holder.textChat.setTextColor(getResources().getColor(R.color.fontcolor_content));
+                        bean.setmLastChat(bean.getmLastChat().split("]")[1]);
+                        bean.setmRead(0);
+                        mChatBeans.set(adapterPosition,bean);
+                        bean = mChatBeans.get(adapterPosition);
+                    }
+                    //跳转
+                    ChatActivity.jumpActivity(getContext(), bean);
+                    mMyChatAdapter.notifyDataSetChanged();
+                }
+            });
         }
 
         @Override
