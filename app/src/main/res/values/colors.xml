@@ -9,4 +9,6 @@
     <!--字体颜色-->
     <color name="fontcolor_content_check">#45c01a</color>
     <color name="fontcolor_content">#999999</color>
+    <color name="a">#c7c7cc</color>
+    <color name="b">#ff3b30</color>
 </resources>

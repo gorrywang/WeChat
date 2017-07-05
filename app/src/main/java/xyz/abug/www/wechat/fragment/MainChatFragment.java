@@ -1,5 +1,6 @@
 package xyz.abug.www.wechat.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.yanzhenjie.recyclerview.swipe.Closeable;
+import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +28,7 @@ import java.util.List;
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.activity.ChatActivity;
 import xyz.abug.www.wechat.bean.ChatBean;
+import xyz.abug.www.wechat.utils.DensityUtils;
 import xyz.abug.www.wechat.view.MyDecoration;
 
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_FRIEND;
@@ -31,10 +42,11 @@ import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
 public class MainChatFragment extends Fragment {
 
     private View mView;
-    private RecyclerView mRecycler;
+    private SwipeMenuRecyclerView mRecycler;
     private MyChatAdapter mMyChatAdapter;
     //数据数组
     private List<ChatBean> mChatBeans = new ArrayList<>();
+    private float mWidth, mHeight, mDelWidth;
 
     @Nullable
     @Override
@@ -47,6 +59,9 @@ public class MainChatFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        mWidth = DensityUtils.dp2px(getContext(), 100);
+        mDelWidth = DensityUtils.dp2px(getContext(), 70);
+        mHeight = DensityUtils.dp2px(getContext(), 65);
         initChatData();
         initAdapter();
     }
@@ -61,6 +76,45 @@ public class MainChatFragment extends Fragment {
         mRecycler.setLayoutManager(manager);
         mRecycler.setAdapter(mMyChatAdapter);
         mRecycler.addItemDecoration(new MyDecoration(getContext(), MyDecoration.VERTICAL_LIST));
+        //设置监听器,创建菜单
+        mRecycler.setSwipeMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+                //标记为未读
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext())
+                        .setBackgroundColor(getResources().getColor(R.color.a))
+                        .setText("标为未读")
+                        .setTextColor(Color.WHITE)
+                        .setTextSize(16)
+                        .setWidth((int) mWidth)
+                        .setHeight((int) mHeight);
+                swipeRightMenu.addMenuItem(deleteItem);
+                //删除
+                SwipeMenuItem deleteItem2 = new SwipeMenuItem(getContext())
+                        .setBackgroundColor(getResources().getColor(R.color.b))
+                        .setText("删除")
+                        .setTextColor(Color.WHITE)
+                        .setTextSize(16)
+                        .setWidth((int) mDelWidth)
+                        .setHeight((int) mHeight);
+                swipeRightMenu.addMenuItem(deleteItem2);
+
+            }
+        });
+        mRecycler.setSwipeMenuItemClickListener(new OnSwipeMenuItemClickListener() {
+            @Override
+            public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
+                if (menuPosition == 0) {
+                    //标记为未读
+                    Toast.makeText(getContext(), "标记为未读", Toast.LENGTH_SHORT).show();
+                    mRecycler.smoothCloseMenu();
+                } else if (menuPosition == 1) {
+                    //删除
+                    mChatBeans.remove(adapterPosition);
+                    mMyChatAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     /**
@@ -108,17 +162,24 @@ public class MainChatFragment extends Fragment {
      * 初始化数据
      */
     private void initView() {
-        mRecycler = (RecyclerView) mView.findViewById(R.id.frag_chat_recycler_show);
+        mRecycler = (SwipeMenuRecyclerView) mView.findViewById(R.id.frag_chat_recycler_show);
     }
 
     /**
      * 消息页面适配器
      */
-    private class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.ViewHolder> {
+    private class MyChatAdapter extends SwipeMenuAdapter<MyChatAdapter.ViewHolder> {
+
+
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public View onCreateContentView(ViewGroup parent, int viewType) {
             View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_main_chat_chat, parent, false);
-            final ViewHolder viewHolder = new ViewHolder(inflate);
+            return inflate;
+        }
+
+        @Override
+        public ViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
+            final ViewHolder viewHolder = new ViewHolder(realContentView);
             //点击事件
             viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
