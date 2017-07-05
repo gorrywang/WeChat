@@ -1,4 +1,4 @@
-package xyz.abug.www.wechat.view;
+package xyz.abug.www.wechat.decoration;
 
 import android.content.Context;
 import android.content.res.TypedArray;

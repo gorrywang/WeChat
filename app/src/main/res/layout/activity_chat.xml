@@ -91,12 +91,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#f5f5f6">
         <!--功能-->
         <LinearLayout
             android:id="@+id/ac_chat_linear_jiahao"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -109,7 +110,7 @@
         <LinearLayout
             android:id="@+id/ac_chat_linear_biaoqing"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:orientation="horizontal"
             android:visibility="gone">
 

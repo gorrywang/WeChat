@@ -18,8 +18,6 @@ import xyz.abug.www.wechat.bean.BaseIndexTagBean;
 
 /**
  * 有分类title的 ItemDecoration
- * Created by zhangxutong .
- * Date: 16/08/28
  */
 
 public class TitleItemDecoration extends RecyclerView.ItemDecoration {
@@ -85,7 +83,7 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             int position = params.getViewLayoutPosition();
-            if (mDatas == null ||mDatas.isEmpty() || position > mDatas.size() - 1) {//pos为1，size为1，1>0? true
+            if (mDatas == null || mDatas.isEmpty() || position > mDatas.size() - 1) {//pos为1，size为1，1>0? true
                 return;//越界
             }
             //我记得Rv的item position在重置时可能为-1.保险点判断一下吧
@@ -107,7 +105,6 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * 绘制Title区域背景和文字的方法
-     *
      */
     private void drawTitleArea(Canvas c, int left, int right, View child, RecyclerView.LayoutParams params, int position) {//最先调用，绘制在最下层
         mPaint.setColor(COLOR_TITLE_BG);
@@ -124,7 +121,7 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) {//最后调用 绘制在最上层
         int pos = ((LinearLayoutManager) (parent.getLayoutManager())).findFirstVisibleItemPosition();
-        if (mDatas == null ||mDatas.isEmpty() || pos > mDatas.size() - 1) {//pos为1，size为1，1>0? true
+        if (mDatas == null || mDatas.isEmpty() || pos > mDatas.size() - 1) {//pos为1，size为1，1>0? true
             return;//越界
         }
 
@@ -224,7 +221,7 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         int position = ((RecyclerView.LayoutParams) view.getLayoutParams()).getViewLayoutPosition();
-        if (mDatas == null ||mDatas.isEmpty() || position > mDatas.size() - 1) {//pos为1，size为1，1>0? true
+        if (mDatas == null || mDatas.isEmpty() || position > mDatas.size() - 1) {//pos为1，size为1，1>0? true
             return;//越界
         }
         //我记得Rv的item position在重置时可能为-1.保险点判断一下吧

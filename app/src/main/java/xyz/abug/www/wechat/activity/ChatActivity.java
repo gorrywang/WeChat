@@ -3,6 +3,7 @@ package xyz.abug.www.wechat.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -291,9 +292,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         //初始化适配器
         initAdapter();
+        //初始化pager
+        initPager();
         //隐藏声音显示输入框
         mTextSy.setVisibility(View.GONE);
         mEditInput.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 初始化表情和分类的adapter
+     */
+    private void initPager() {
+        List<View> mList1 = new ArrayList<>();
+        List<View> mList2 = new ArrayList<>();
+//        MyPagerAdapter adapter2 = new MyPagerAdapter(mList2);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.item_jiahao_1, null);
+        View view2 = LayoutInflater.from(this).inflate(R.layout.item_jiahao_2, null);
+        mList1.add(view1);
+        mList1.add(view2);
+        MyPagerAdapter adapter1 = new MyPagerAdapter(mList1);
+        mPagerJiahao.setAdapter(adapter1);
+
     }
 
     /**
@@ -455,6 +474,38 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         return true;
+    }
+
+    /**
+     * pagerAdapter
+     */
+    private class MyPagerAdapter extends PagerAdapter {
+        private List<View> mList;
+
+        public MyPagerAdapter(List<View> mList) {
+            this.mList = mList;
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(mList.get(position));
+            return mList.get(position);
+        }
     }
 
     /**

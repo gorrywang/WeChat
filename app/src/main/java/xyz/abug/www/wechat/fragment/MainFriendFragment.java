@@ -68,10 +68,13 @@ public class MainFriendFragment extends Fragment {
         mRv.setLayoutManager(mManager = new LinearLayoutManager(getContext()));
         //initDatas();
         initDatas(getResources().getStringArray(R.array.provinces));
+
         //mDatas = new ArrayList<>();//测试为空或者null的情况 已经通过 2016 09 08
 
         mRv.setAdapter(mAdapter = new CityAdapter(getContext(), mDatas));
         mRv.addItemDecoration(mDecoration = new TitleItemDecoration(getContext(), mDatas));
+        mDecoration.setmTitleHeight(60);
+        mDecoration.setTitleFontSize(45);
         //如果add两个，那么按照先后顺序，依次渲染。
         //mRv.addItemDecoration(new TitleItemDecoration2(this,mDatas));
         mRv.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -89,9 +92,6 @@ public class MainFriendFragment extends Fragment {
 
     /**
      * 组织数据源
-     *
-     * @param data
-     * @return
      */
     private void initDatas(String[] data) {
         mDatas = new ArrayList<>();
@@ -100,20 +100,6 @@ public class MainFriendFragment extends Fragment {
             cityBean.setCity(data[i]);//设置城市名称
             mDatas.add(cityBean);
         }
-    }
-
-    /**
-     * 更新数据源
-     *
-     * @param view
-     */
-    public void updateDatas(View view) {
-        for (int i = 0; i < 99; i++) {
-            mDatas.add(new CityBean("东京"));
-            mDatas.add(new CityBean("大阪"));
-        }
-        mAdapter.notifyDataSetChanged();
-        mIndexBar.setmSourceDatas(mDatas);
     }
 
 
@@ -132,7 +118,7 @@ public class MainFriendFragment extends Fragment {
 
         @Override
         public CityAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(mInflater.inflate(R.layout.item_city, parent, false));
+            return new ViewHolder(mInflater.inflate(R.layout.item_friend, parent, false));
         }
 
         @Override
