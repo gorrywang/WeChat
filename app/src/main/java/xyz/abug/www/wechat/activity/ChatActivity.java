@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,16 +23,30 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.turing.androidsdk.InitListener;
+import com.turing.androidsdk.SDKInit;
+import com.turing.androidsdk.SDKInitBuilder;
+import com.turing.androidsdk.TuringApiManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import turing.os.http.core.ErrorMessage;
+import turing.os.http.core.HttpConnectionListener;
+import turing.os.http.core.RequestResult;
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.bean.ChatBean;
 import xyz.abug.www.wechat.bean.MessageBean;
+import xyz.abug.www.wechat.utils.TulingUtils;
 
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_FRIEND;
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_TAKE;
+import static xyz.abug.www.wechat.utils.TulingUtils.mTuringKey;
+import static xyz.abug.www.wechat.utils.TulingUtils.mUniqueId;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,6 +80,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mLinearFriend;
     //键盘管理器
     private InputMethodManager mInputManager;
+    //图灵管理
+    private TuringApiManager mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +170,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //            if(mInputManager.isActive()){
 //                mInputManager.hideSoftInputFromWindow(ChatActivity.this.getCurrentFocus().getWindowToken(), 0);
 //            }
+            //像服务器发送消息
+            try {
+                mManager.requestTuringAPI(data);
+            } catch (Exception e) {
+                Toast.makeText(ChatActivity.this,"错误",Toast.LENGTH_SHORT).show();
+            }
 
             return true;
         }
@@ -214,6 +237,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             case CHAT_TYPE_FRIEND:
                 //好友消息
                 mLinearFriend.setVisibility(View.VISIBLE);
+                //开启图灵
+                startTuling();
                 setFriendChat();
                 break;
             case CHAT_TYPE_GROUP:
@@ -225,6 +250,32 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 mLinearFriend.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    /**
+     * 开启图灵
+     */
+    private void startTuling() {
+        SDKInitBuilder b = new SDKInitBuilder(ChatActivity.this).setSecret(TulingUtils.mSecret).setTuringKey(mTuringKey)
+                .setUniqueId(mUniqueId);
+        // 初始化
+        SDKInit.init(b, new InitListener() {
+
+            // 回调失败
+            @Override
+            public void onFail(String arg0) {
+                Log.e("TAG", arg0);
+            }
+
+            // 回调成功
+            @Override
+            public void onComplete() {
+                // 实例化TuringApiManager，一定在sdkinit完成后
+                mManager = new TuringApiManager(ChatActivity.this);
+                //请求服务器
+                mManager.setHttpListener(myHttpConnectionListener);
+            }
+        });
     }
 
     /**
@@ -453,4 +504,48 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+
+    /**
+     * 网络请求回调
+     */
+    HttpConnectionListener myHttpConnectionListener = new HttpConnectionListener() {
+
+        // 成功后
+        @Override
+        public void onSuccess(RequestResult result) {
+            //有数据
+            if (result != null) {
+                try {
+                    Log.d("TAG", result.getContent().toString());
+                    // 获取json对象,参数结果转换成string
+                    JSONObject result_obj = new JSONObject(result.getContent().toString());
+                    //判断json对象中有没有text
+                    if (result_obj.has("text")) {
+                         final String ss = (String) result_obj.get("text");
+                        //更新数据
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ChatActivity.this,ss,Toast.LENGTH_SHORT).show();
+                                MessageBean bean = new MessageBean(0,1,ss,"2017.1.1",mBean.getmName(),R.drawable.icon);
+                                mMessageBeanList.add(bean);
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.smoothScrollToPosition(mMessageBeanList.size()-1);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    Log.d("TAG", "JSONException:" + e.getMessage());
+                }
+            }
+        }
+
+        // 失败后
+        @Override
+        public void onError(ErrorMessage errorMessage) {
+            Log.d("TAG", errorMessage.getMessage());
+        }
+    };
+
 }
