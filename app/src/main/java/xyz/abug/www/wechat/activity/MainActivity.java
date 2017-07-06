@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar mBarTitle;
     private ImageView mImgBackground;
     private ActionBar mActionBar;
+    private LinearLayout mLinearShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         immersion(false);
+                        mLinearShow.setVisibility(View.VISIBLE);
                         mImgBackground.setVisibility(View.GONE);
                     }
                 });
@@ -160,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化
      */
     private void initView() {
+        mLinearShow = (LinearLayout) findViewById(R.id.ac_main_linear_show);
         mImgBackground = (ImageView) findViewById(R.id.ac_main_img_background);
         mBarTitle = (Toolbar) findViewById(R.id.ac_main_toolbar_title);
         mLinearChat = (LinearLayout) findViewById(R.id.ac_main_linear_chat);

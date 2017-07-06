@@ -1,9 +1,13 @@
 package xyz.abug.www.wechat.fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,8 +32,8 @@ import java.util.List;
 import xyz.abug.www.wechat.R;
 import xyz.abug.www.wechat.activity.ChatActivity;
 import xyz.abug.www.wechat.bean.ChatBean;
-import xyz.abug.www.wechat.utils.DensityUtils;
 import xyz.abug.www.wechat.decoration.MyDecoration;
+import xyz.abug.www.wechat.utils.DensityUtils;
 
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_FRIEND;
 import static xyz.abug.www.wechat.bean.ChatBean.CHAT_TYPE_GROUP;
@@ -52,7 +56,38 @@ public class MainChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_main_chat, null);
+        //申请权限
+        sqqx();
         return mView;
+    }
+
+    /**
+     * 申请权限
+     */
+    private void sqqx() {
+        if (ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //无权限
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContext(), "权限申请成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "权限授权失败，6.0以上设备聊天页面可能会闪退", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
     }
 
     @Override
@@ -110,8 +145,8 @@ public class MainChatFragment extends Fragment {
                     //设置
                     ChatBean bean = mChatBeans.get(adapterPosition);
                     bean.setmRead(1);
-                    bean.setmLastChat("[未读消息]"+bean.getmLastChat());
-                    mChatBeans.set(adapterPosition,bean);
+                    bean.setmLastChat("[未读消息]" + bean.getmLastChat());
+                    mChatBeans.set(adapterPosition, bean);
                     mRecycler.smoothCloseMenu();
                     mMyChatAdapter.notifyDataSetChanged();
                 } else if (menuPosition == 1) {
@@ -129,37 +164,40 @@ public class MainChatFragment extends Fragment {
      */
     private void initChatData() {
         ChatBean bean;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:12", "亮亮", "我叫桂亮，我是最帅的~哈哈哈", R.drawable.user1,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:17", "王五", "哦呵呵~", R.drawable.user9, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "11:12", "东辉", "我是葬爱家族的族长祁东辉", R.drawable.user2,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "12:12", "亮亮", "我叫桂亮，我是最帅的~哈哈哈", R.drawable.user1, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "10:09", "林依", "林雨~依直走~", R.drawable.user3,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "11:12", "东辉", "我是葬爱家族的族长祁东辉", R.drawable.user2, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:12", "老边", "嘿~嘿~嘿~", R.drawable.user4,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "10:09", "林依", "林雨~依直走~", R.drawable.user3, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:05", "生鑫", "wo ji ni niang a", R.drawable.user5,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:12", "老边", "嘿~嘿~嘿~", R.drawable.user4, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:00", "刘兴洲", "[图片]", R.drawable.user6,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:05", "生鑫", "wo ji ni niang a", R.drawable.user5, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:31", "老司机", "卧槽！有人把我头按在键盘上了！唔唔唔RRDTYFGHUIHYGYTFRYGHUIYGUTYFYTYG", R.drawable.user7,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "09:00", "刘兴洲", "[图片]", R.drawable.user6, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:25", "赵诺诺", "哈哈哈，撒比", R.drawable.user8,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:31", "老司机", "卧槽！有人把我头按在键盘上了！唔唔唔RRDTYFGHUIHYGYTFRYGHUIYGUTYFYTYG", R.drawable.user7, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:12", "汉志", "哥哥你起床了吗？我到了", R.drawable.user9,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:25", "赵诺诺", "哈哈哈，撒比", R.drawable.user8, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.user1,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "08:12", "汉志", "哥哥你起床了吗？我到了", R.drawable.user9, 0);
         mChatBeans.add(bean);
         bean = null;
-        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "顺丰速运", "[我要出出出出出出出名]", R.drawable.sfsy,0);
+        bean = new ChatBean(CHAT_TYPE_FRIEND, "07:12", "硕硕", "放假咱一块聚聚", R.drawable.user1, 0);
+        mChatBeans.add(bean);
+        bean = null;
+        bean = new ChatBean(CHAT_TYPE_GROUP, "07:10", "顺丰速运", "[我要出出出出出出出名]", R.drawable.sfsy, 0);
         mChatBeans.add(bean);
         bean = null;
 
@@ -213,7 +251,7 @@ public class MainChatFragment extends Fragment {
                         holder.textChat.setTextColor(getResources().getColor(R.color.fontcolor_content));
                         bean.setmLastChat(bean.getmLastChat().split("]")[1]);
                         bean.setmRead(0);
-                        mChatBeans.set(adapterPosition,bean);
+                        mChatBeans.set(adapterPosition, bean);
                         bean = mChatBeans.get(adapterPosition);
                     }
                     //跳转

@@ -113,10 +113,10 @@
             android:layout_height="220dp"
             android:orientation="horizontal"
             android:visibility="gone">
-            <FrameLayout
-                android:id="@+id/ac_chat_frame_biaoqing"
+            <fragment
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_height="220dp"
+                class="io.github.rockerhieu.emojicon.EmojiconGridFragment"/>
         </LinearLayout>
     </FrameLayout>
 

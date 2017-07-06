@@ -106,8 +106,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setting();
         //初始化数据
         initData();
-        //初始化表情
-        setEmojiconFragment(false);
         //初始化适配器以及键盘
         initAdapterANdInput();
 
@@ -488,14 +486,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void onEmojiconClicked(Emojicon emojicon) {
 //        Toast.makeText(ChatActivity.this,"点击",Toast.LENGTH_SHORT).show();
         EmojiconsFragment.input(mEditInput, emojicon);
-    }
-
-    //EmojiconsFragment表情显示的fragment
-    private void setEmojiconFragment(boolean useSystemDefault) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.ac_chat_frame_biaoqing, EmojiconsFragment.newInstance(useSystemDefault))
-                .commit();
     }
 
     /**

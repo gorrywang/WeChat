@@ -7,6 +7,8 @@
     tools:context="xyz.abug.www.wechat.activity.MainActivity">
 
     <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/ac_main_linear_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
