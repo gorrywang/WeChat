@@ -590,6 +590,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 网络请求回调
+     * 图灵聊天
      */
     HttpConnectionListener myHttpConnectionListener = new HttpConnectionListener() {
 
